@@ -1,0 +1,58 @@
+# Publicación de software en redborder-ng
+
+:REDBORDER: redborder
+:PERIODICIDAD-RELEASES-MESES: 4
+:PERIODICIDAD-RELEASES-LTS-MESES: 12
+:SOPORTE-RELEASES-LTS-MESES: 15
+:FEATURE-FREEZE-DIAS: 30
+
+## Definiciones y conceptos
+IMPORTANT: La duración de soporte y periodicidad de las releases es WIP y, por tanto, pueden sufrir variaciones.
+
+Release:: Es una publicación cada :PERIODICIDAD-RELEASES-MESES: del software de redborder. Se implementa como un repositorio de paquetes RPM, y se nombra con el año y el mes de publicación.
+
+// TODO qué día?
+Lanzamiento de una release:: Se produce un día del mes que nombra la release, y es el momento a partir del cual la release se considera lista para producción.
+
+Creación de una release:: Creación del repositorio RPM que la alberga.
+
+Release STABLE:: Si `versión_release` < `momento_actual`, es decir, que ya ha sido publicada.
+
+Release UNESTABLE:: Si `versión_release` > `momento_actual`, es decir, que aún no ha sido publicada
+
+Release SUPPORT:: Release *estable* para la que aún se meten bugfixes, es decir, cumple las siguientes condiciones:
+  - versión_release < momento_actual
+  - La release posterior aún no ha sido publicada
+  - Duración 4 meses
+
+Release UNSUPPORT:: Release *estable* para la que no se hacen cambios. Cumple que:
+  - versión_release < momento_actual
+  - Una release posterior estable ya ha sido publicada
+  - No es una release *LTS*, o bien es una *LTS* lanzada hace más de {SOPORTE-RELEASES-LTS-MESES} meses.
+
+Release LTS:: Release STABLE soportada durante {SOPORTE-RELEASES-LTS-MESES} meses.
+
+Feature Freeze:: *Congelación* de novedades. {FEATURE-FREEZE-DIAS} días antes del lanzamiento de una versión, se prohíbe introducir novedades en los programas de {REDBORDER}, tan sólo correcciones de fallos.
+
+## Descripción y ejemplo del procedimiento de publicación
+Proporcionamos un ejemplo desde enero de 2017 hasta final del mismo para el ciclo de vida de las releases, es decir, las releases `17.*`.
+
+Enero 2017:: Creamos la release `17.01` (si no estuviese ya) y la `17.04`. Suponemos que la `17.04` será LTS. En este momento ambos repositorios son iguales. Desde ese momento y hasta la siguiente iteración, en la release `17.01` se considera estable y sólo se pueden introducir correción de errores, y en la `17.04` las características que se esperan para esa revisión (y, por supuesto, la corrección de errores que apliquen).
+
+// TODO nested lists? see http://asciidoc.org/chunked/ch17.html
+Marzo 2017:: Entramos en *congelación* de `17.04`. Es necesario crear el repositorio `17.07`, y cambias las normas para cada repositorio:
+* El repositorio `17.01` sigue aceptando sólo corrección de errores.
+* El repositorio `17.04` pasa a aceptar sólo corrección de errores. Sin embargo, aún no se considera estable.
+* El repositorio `17.07` aceptará las características esperadas para esa revisión.
+
+Abril 2017:: El repositorio `17.04` se considera estable y listo para producción, y sólo aceptará corrección de errores. Se cierra el `17.01`, ya que no se introducirán más mejoras ni corrección de errores.
+
+Junio 2017:: El repositorio `17.07` entra en *congelación*, y ya no se permite introducir novedades. Se crea la release `17.10`.
+
+Julio 2017:: La revisión `17.07` se considera estable, y se lanza.
+
+Septiembre 2017:: La revisión `17.10` entra en congelación. Se crea la revisión `18.01`
+
+Octubre 2017:: Se lanza la revisión `17.10` y la `17.07` se cierra, no aceptando más correcciones de errores.
+
+Diciembre 2017:: Se congela la versión `18.01`, y se crea la versión `18.04`.
